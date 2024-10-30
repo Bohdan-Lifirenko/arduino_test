@@ -3,23 +3,30 @@
 int state = 0;
 
 void setup() {
-  pinMode(LED_BUILTIN, HIGH);
+  pinMode(LED_BUILTIN, OUTPUT);
   Serial.begin(9600);
-
-  state = Serial.available();
-  Serial.println(state);
 }
 
 void loop() {
-  if (state != Serial.available())
-    {
-      state = Serial.available();
-      Serial.println(state);
-    }
+  Serial.write("Choose condition of a lamp (0, 1): \n");
+  while (Serial.available() == 0)
+  {
+    /* code */
+  }
+  
 
-    if (state == 3)
-    {
-      int str = Serial.parseInt();
-      Serial.println(str);
-    }
+  int state = Serial.parseInt();  //read until timeout
+  Serial.println(state);
+
+  digitalWrite(LED_BUILTIN, state);
+
+  // if (state == 1)
+  // {
+  //   pinMode(LED_BUILTIN, HIGH);  
+  // }
+  
+  // if (state == 0)
+  // {
+  //   pinMode(LED_BUILTIN, LOW);  
+  // }
 }
