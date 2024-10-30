@@ -11,16 +11,15 @@ void setup() {
 }
 
 void loop() {
-
-    if (state != Serial.available())
+  if (state != Serial.available())
     {
       state = Serial.available();
       Serial.println(state);
     }
 
-    if (state == 10)
+    if (state == 3)
     {
-      String str = Serial.readString();
+      int str = Serial.parseInt();
       Serial.println(str);
     }
 }
