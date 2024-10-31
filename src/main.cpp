@@ -1,32 +1,39 @@
 #include <Arduino.h>
+#include "SoftwareSerial.h"
+#include "LoRa_E32.h"
+#include "AntenaGenerator.h"
 
-int state = 0;
+// Глобальні змінні для використання в основному циклі
+SoftwareSerial* mySerial = nullptr;
+LoRa_E32* e32 = nullptr;
 
 void setup() {
-  pinMode(LED_BUILTIN, OUTPUT);
+  // Отримуємо вказівник на SoftwareSerial
+  mySerial = AntenaGenerator::getSoftSerial();
+  
+  // Отримуємо вказівник на LoRa_E32
+  e32 = AntenaGenerator::getLora();
+
+  // Ініціалізуємо серійний порт
   Serial.begin(9600);
+  
+  // Ініціалізація модуля E32
+  bool success = e32->begin();
+  if (!success) {
+    Serial.println("Помилка ініціалізації E32");
+    delay(10000);
+    return;
+  }
+
+    // Отримання конфігурації антени
+  ResponseStructContainer configContainer = e32->getConfiguration();
+  if (configContainer.status.code != 1) {
+    Serial.println("Помилка отримання конфігурації: " + String(configContainer.status.getResponseDescription()));
+    delay(10000);
+    return;
+  }
 }
 
 void loop() {
-  Serial.write("Choose condition of a lamp (0, 1): \n");
-  while (Serial.available() == 0)
-  {
-    /* code */
-  }
-  
-
-  int state = Serial.parseInt();  //read until timeout
-  Serial.println(state);
-
-  digitalWrite(LED_BUILTIN, state);
-
-  // if (state == 1)
-  // {
-  //   pinMode(LED_BUILTIN, HIGH);  
-  // }
-  
-  // if (state == 0)
-  // {
-  //   pinMode(LED_BUILTIN, LOW);  
-  // }
+  // Ваш код тут
 }
